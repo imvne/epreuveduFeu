@@ -2,18 +2,39 @@
 
 // Useful functions
 
-function expressionToArray(string){
-	const numbersArray = [];
-	const expression = ""; 
-	for (let i = 0 ; i < string ; i++){
-		if (!isNaN(string[i])){
-			numbersArray.push(string[i])
-		}
-		if (string[i] === '('){
-			
-			expression += string[i]
-		}
+function fromBracketToArray(array){
+	let openBracket = 0
+	let closeBracket = 0;
+	let counter = 0;
+	let newArray = [];
+	
+for (let i = 0 ; i < array.length ; i++){
+
+	if (array[i].includes('(') && openBracket === closeBracket){ //(+nombre
+		openBracket++
+		newArray.push(array[i].replace(/[(]/g, ""))
+		counter = i
 	}
+	else if (closeBracket === openBracket - 1 && !array[i].includes(')')){
+		newArray.push(array[i])
+	}
+	else if (array[i].includes(')') && closeBracket === openBracket - 1){ //(+nombre
+		closeBracket++
+		newArray.push(array[i].replace(/[)]/, ""))
+		array.splice(counter, newArray.length, newArray)
+		newArray = [];
+		i = counter
+	}
+	else {
+		counter++
+	}
+	
+	if(Array.isArray(array[i])){
+		array.splice(i, counter - i + 1, fromBracketToArray(array[i]))
+	}
+
+}	
+	return array
 }
 
 function calculator(arguments){
@@ -36,13 +57,6 @@ function isValidArguments(arguments){
 	}
 }
 
-function isPositiveInteger(number){
-	if (number > 0 && Number.isInteger(Number(number))){ // n'inclus pas le zéro
-		return parseInt(number);
-	} else {
-		return console.log("erreur : n'insérez que des entiers positifs")
-	}
-}
 
 // Parsing
 
@@ -56,10 +70,9 @@ function getArguments(){
 
 function displayRectangle(){
       const string = isValidArguments(getArguments())[0];
-      const numbers = [];
+      const numbers = string.split(' ');
 	
-	
-      return console.log(string)
+      return console.log(fromBracketToArray(numbers))
       
 }
 
