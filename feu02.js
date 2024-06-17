@@ -33,52 +33,75 @@ function fromTxtToSubArrays(fileName){
 function findPieceInBoard(board, piece){
 	let pieceFound = [];
 	let pieceFoundLine = [];
+	
+	let pieceWidth = piece[0].length
+	let pieceHeight = piece.length
+	let boardWidth = board[0].length
+	let boardHeight = board.length
+	
 	let kLocation;
 	let iLocation;
 	
-	for (let i = 0 ; i < board.length ; i++){
+	let kTestLimit;
+	let iTestLimit = boardHeight
+	
+	for (let i = 0 ; i < iTestLimit ; i++){
 		const boardLine = board[i]
+		kTestLimit = boardWidth
 		
-		for (let j = 0 ; j < piece.length ; ){
+		for (let j = 0 ; j < pieceHeight ; ){
 			const pieceLine = piece[j]
 			
-			for (let k = 0 ; k < boardLine.length ; ){
-				for (let l = 0 ; l < pieceLine.length ; ){
+			for (let k = 0 ; k < kTestLimit ; ){
+				for (let l = 0 ; l < pieceWidth ; ){
+		
+					if (!kLocation && !iLocation){
+						if (boardLine[k] === pieceLine[l]){
+							kLocation = k
+							iLocation = i
+							kTestLimit = kLocation + pieceWidth
+							iTestLimit = iLocation + pieceHeight
+							k = kLocation
+							
+							l++
+							
+						} else if(pieceLine[l] === ' '){
+							kLocation = k
+							iLocation = i
+							k++
+						} else {
+							k++
+						}
+					} 
+					else if(kLocation && iLocation){
+						if (boardLine[k] === pieceLine[l]){
+							l++
+							k++
+							
+						} else if (boardLine[k] !== pieceLine[l]){
+							k = kLocation + 1
+							i = iLocation
+							l = 0;
+							j = 0;
+							kLocation = undefined
+							iLocation = undefined
+							
+						} else if(pieceLine[l] === ' '){
+							continue
+						}
+					} 
 					
-					if (pieceLine[l] === ' '){
-						pieceFoundLine.push('-')
-						l++
+					if (l === pieceWidth.length-1){
+						j++
 					}
-					
-					if (boardLine[k] === pieceLine[l] && !kLocation && !iLocation){
-						kLocation = k
-						iLocation = i
-						
-						pieceFoundLine.push(pieceLine[l])
-						l++
-					} 
-					else if(kLocation && iLocation && boardLine[k] === pieceLine[l]){
-						pieceFoundLine.push(pieceLine[l])
-						l++
-					} 
-					else if(kLocation && iLocation && boardLine[k] !== pieceLine[l]){
-						pieceFoundLine.push('-')
-						kLocation = undefined
-						iLocation = undefined
-					} 
-					else {
-						pieceFoundLine.push('-')
-					}
-					k++
 					
 				}
 			}
-			pieceFound.push(pieceFoundLine)
-			pieceFoundLine = [];
 			
 		} 
 	}
-	return pieceFound
+	
+	return [l, k, j, i]
 }
 
 // Error management
