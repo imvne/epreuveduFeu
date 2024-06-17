@@ -12,8 +12,8 @@ function readFileSync(fileName){
 	return fs.readFileSync(fileName, readOptions)
 }
 
-function fromTxtToSubArrays(fileContent){
-	const txtToArray = fileContent.split('\n')
+function fromTxtToSubArrays(fileName){
+	const txtToArray = readFileSync(fileName).split('\n')
 	
 	let subArray = [];
 	const txtToSubArrays = [];
@@ -30,14 +30,65 @@ function fromTxtToSubArrays(fileContent){
 	return txtToSubArrays
 }
 
+function findPieceInBoard(board, piece){
+	let pieceFound = [];
+	let pieceFoundLine = [];
+	let kLocation;
+	let iLocation;
+	
+	for (let i = 0 ; i < board.length ; i++){
+		const boardLine = board[i]
+		
+		for (let j = 0 ; j < piece.length ; ){
+			const pieceLine = piece[j]
+			
+			for (let k = 0 ; k < boardLine.length ; ){
+				for (let l = 0 ; l < pieceLine.length ; ){
+					
+					if (pieceLine[l] === ' '){
+						pieceFoundLine.push('-')
+						l++
+					}
+					
+					if (boardLine[k] === pieceLine[l] && !kLocation && !iLocation){
+						kLocation = k
+						iLocation = i
+						
+						pieceFoundLine.push(pieceLine[l])
+						l++
+					} 
+					else if(kLocation && iLocation && boardLine[k] === pieceLine[l]){
+						pieceFoundLine.push(pieceLine[l])
+						l++
+					} 
+					else if(kLocation && iLocation && boardLine[k] !== pieceLine[l]){
+						pieceFoundLine.push('-')
+						kLocation = undefined
+						iLocation = undefined
+					} 
+					else {
+						pieceFoundLine.push('-')
+					}
+					k++
+					
+				}
+			}
+			pieceFound.push(pieceFoundLine)
+			pieceFoundLine = [];
+			
+		} 
+	}
+	return pieceFound
+}
+
 // Error management
 
 function isValidArguments(arguments){
-      if (arguments.length === 1){
-            return arguments[0]
+      if (arguments.length === 2){
+            return arguments
       }
 	else {
-		return console.log("erreur : insérez un argument")
+		return console.log("erreur : insérez deux argument")
 	}
 }
 
@@ -54,13 +105,14 @@ function getArguments(){
 
 function findThePiece(){
       const arguments = isValidArguments(getArguments());
+	const board = arguments[0]
+	const piece = arguments[1]
 	
 	if(!arguments){
 		return
 	}
 	
-	const fileContent = readFileSync(arguments)
-      return console.log(fromTxtToSubArrays(fileContent))
+      return console.log(findPieceInBoard(fromTxtToSubArrays(board), fromTxtToSubArrays(piece)))
       
 }
 
