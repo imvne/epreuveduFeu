@@ -68,8 +68,7 @@ function putMultDivInArrays(array){ // met toutes les divisons et multiplication
 
 }
 
-function calculator(array){ // calcule les éléments les uns à la suite des autres
-
+function calculator(array){ // calcule les éléments les uns à la suite des autres	
 	for (let i = 0 ; i < array.length ; i++){
 		
 		if (Array.isArray(array[i])){
@@ -110,7 +109,7 @@ function calculator(array){ // calcule les éléments les uns à la suite des au
 
 function isValidArguments(arguments){
       if (arguments.length === 1){
-            return arguments
+            return arguments[0]
       }
 	else {
 		return console.log("erreur : insérez une expression")
@@ -128,16 +127,20 @@ function getArguments(){
 
 // Solving
 
-function displayResultOfCalc(){
+function displayResultOfCalculator(){
       const argument = isValidArguments(getArguments());
-	const string = argument[0]
-      const numbers = string.split(' ');
+	const expression = argument.split(' ');
+	const numbersInSubArrays = putMultDivInArrays(fromBracketToArray(expression))
 	
-      return console.log(calculator(putMultDivInArrays(fromBracketToArray(numbers)))[0])
+	if (!argument){
+		return
+	}
+	
+      return console.log(calculator(numbersInSubArrays))
       
 }
 
 
 // Print
 
-displayResultOfCalc()
+displayResultOfCalculator()
