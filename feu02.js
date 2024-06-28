@@ -75,9 +75,9 @@ function displayFoundPiece(board, piece, location){
 			for (let i = 0; i < board.length; i++) {
 				for (let k = 0; k < board[0].length; k++) {
 					if (k >= location[0] && i >= location[1] && k < pieceLimit[0] && i < pieceLimit[1]){
-						
-						while (piece[0] !== null) {
-							while (piece[0][0] !== null) {
+						console.log(piece)
+						while (piece[0]) {
+							while (piece[0][0]) {
 								piece[0][0] === " " ? resultBoardLine += `\x1b[38;5;214m - \x1b[0m` : resultBoardLine += ` \x1b[38;5;172m${piece[0][0]}\x1b[0m `
 								piece[0].splice(0,1)
 								break
