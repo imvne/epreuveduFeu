@@ -40,75 +40,83 @@ function fromTxtToMatrix(fileName){
 
 function findPieceInBoard(board, piece){
 	let location;
+	let locations = []
 			
 	for (let i = 0 ; i < board.length ; i++) {
 		
-		for (let k = 0 ; k < board[0].length ; k++) {
-			if (!location) {
+		for (let k = 0 ; k < board[i].length ; k++) {
+			
+			if ((board[i][k] === piece[0][0] || piece[0][0] === " ") && !location) { // si on rencontre un match et qu'on a pas encore de coordonnées de position
+				console.log(`coordonnées : ${location}`)
+				location = [k, i]
+				console.log(`coordonnées : ${location}`)
 				
-				if (board[i][k] === piece[0][0] || piece[0][0] === " ") {
-					location = [k, i]
+				for (let j = 0; j + i < piece.length; j++) {
+					for (let l = 0; l + k  < piece[j].length; l++) {
+						if (board[i + j][k + l] !== piece[j][l] && piece[j][l] !== " " && location){ // si on rencontre une différence et qu'on a des coordonnées de position
+							console.log(i,k, ' ', j,l)
+							location = undefined
+							break
+						}
+					}
 					
-					for (let j = 0; j < piece.length; j++) {
-						for (let l = 0; l < piece[j].length; l++) {
-							if (board[i + j][k + l] !== piece[j][l] && piece[j][l] !== " "){
-								location = []
+				}
+				
+			} 
+			if (location){ // si on a des coordonnées de position, on les ajoute dans notre tableaux de coordonnées de position
+				locations.push(location)
+				location = null // et on remet location à null pour en accueillir de nouvelles coordonnées de position
+			}
+			
+		}
+	}
+	
+	return locations.length === 0 ? null : locations 
+} 
+
+function displayFoundPiece(board, piece, locations){
+	let resultBoardLine = "";
+	let resultBoardMatrix = "";
+	let resultText;
+	locations ? resultText = `\x1b[38;5;49mTrouvé !\x1b[0m ${locations.length}\n`: resultText = `\x1b[38;5;196mIntrouvable :(\x1b[0m`
+	
+	if (locations){
+		for (location of locations) {
+			if (piece[0]){
+				let pieceLimit = [location[0] + piece[0].length, location[1] + piece.length]
+				for (let i = 0; i < board.length; i++) {
+					for (let k = 0; k < board[0].length; k++) {
+						if (k >= location[0] && i >= location[1] && k < pieceLimit[0] && i < pieceLimit[1]){
+							
+							while (piece[0] !== null) {
+								while (piece[0][0] !== null) {
+									piece[0][0] === " " ? resultBoardLine += `\x1b[38;5;214m - \x1b[0m` : resultBoardLine += ` \x1b[38;5;172m${piece[0][0]}\x1b[0m `
+									piece[0].splice(0,1)
+									break
+								}
+								if (piece[0].length === 0) piece.splice(0, 1)
+								
 								break
 							}
 							
-						}
-						if (!location){
-							break
+							
+							
+						} else {
+							resultBoardLine += ' - '
 						}
 					}
-				} 
-			}
-		}
-	}
-	if (location.length === 0) {
-		return null
-	} else {
-		return location
-	}  
-} 
-
-function displayFoundPiece(board, piece, location){
-	let resultLine = "";
-	let resultMatrix = "";
-	
-	if (location){
-		let pieceLimit = [location[0] + piece[0].length, location[1] + piece.length]
-		
-		for (let i = 0; i < board.length; i++) {
-			for (let k = 0; k < board[0].length; k++) {
-				if (k >= location[0] && i >= location[1] && k < pieceLimit[0] && i < pieceLimit[1]){
-					
-					while (piece[0] !== null) {
-						while (piece[0][0] !== null) {
-							piece[0][0] === " " ? resultLine += ' - ' : resultLine += ` \x1b[38;5;172m${piece[0][0]}\x1b[0m `
-							piece[0].splice(0,1)
-							break
-						}
-						if (piece[0].length === 0) piece.splice(0, 1)
-						 
-						break
-					}
-					
-					
-					
-				} else {
-					resultLine += ' - '
+					resultBoardMatrix += `${resultBoardLine}\n`;
+					resultBoardLine = "";
 				}
+				resultText += `Coordonnées : ${location[0]}, ${location[1]}\n\n${resultBoardMatrix}\n`
 			}
-			resultMatrix += `${resultLine}\n`;
-			resultLine = "";
-		}
-		
-		return `\x1b[38;5;49mTrouvé !\x1b[0m\nCoordonnées : ${location[0]}, ${location[1]}\n\n${resultMatrix}`
+			
+		}	
+		return resultText
 		
 	} 
 	
-	return `\x1b[38;5;196mIntrouvable :(\x1b[0m`
+	return resultText
 	
 }
 
