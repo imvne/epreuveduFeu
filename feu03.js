@@ -44,7 +44,7 @@ function containsThisNumber(binaryNumber, binaryNumberToFind){
 	return (decimalNumber & mask) !== 0 // [binaryNumber, binaryNumberToFind, (decimalNumber & mask) !== 0]
 }
 
-function incompatibleNumbers(grid, i, j){
+function findQueen(){
 	
 	const echiquier =[[1,0,0,0,0,0],
 				[0,0,0,0,1,0],
