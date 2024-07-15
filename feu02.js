@@ -39,6 +39,9 @@ function fromTxtToMatrix(fileName){
 }
 
 function findPieceInBoard(board, piece){
+	let maxPieceWidth = Math.max(...piece.map(row => row.length));
+	if (piece.length > board.length || maxPieceWidth > board[0].length) { return null }
+	
 	let location
 			
 	for (let i = 0 ; i < board.length ; i++) {
@@ -48,10 +51,10 @@ function findPieceInBoard(board, piece){
 			if ((board[i][k] === piece[0][0] || piece[0][0] === " ") && !location) { // si on rencontre un match et qu'on a pas encore de coordonnées de position
 				location = [k, i]
 				
-				for (let j = 0; j + i < piece.length; j++) {
-					for (let l = 0; l + k  < piece[j].length; l++) {
+				for (let j = 0; j < piece.length && i + j < board.length; j++) {
+					for (let l = 0; l < piece[j].length && k + l < board[i].length; l++) {
 						if (board[i + j][k + l] !== piece[j][l] && piece[j][l] !== " " && location){ // si on rencontre une différence et qu'on a des coordonnées de position
-							location = undefined
+							location = null
 							break
 						}
 					}
@@ -75,7 +78,7 @@ function displayFoundPiece(board, piece, location){
 			for (let i = 0; i < board.length; i++) {
 				for (let k = 0; k < board[0].length; k++) {
 					if (k >= location[0] && i >= location[1] && k < pieceLimit[0] && i < pieceLimit[1]){
-						console.log(piece)
+						
 						while (piece[0]) {
 							while (piece[0][0]) {
 								piece[0][0] === " " ? resultBoardLine += `\x1b[38;5;214m - \x1b[0m` : resultBoardLine += ` \x1b[38;5;172m${piece[0][0]}\x1b[0m `
