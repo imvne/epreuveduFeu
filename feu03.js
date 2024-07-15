@@ -28,14 +28,14 @@ function fromTxtToMatrix(string){
 	
 	for (string of txtToArray){
 		for (let i = 0 ; i < string.length ; i++){
-			subArray.push(string[i])
+			subArray.push(parseInt(string[i]))
 			
 		}
 		txtToSubArrays.push(subArray)
 		subArray = [];
 	}
 	
-	return txtToArray
+	return txtToSubArrays
 }
 
 function containsThisNumber(binaryNumber, binaryNumberToFind){
@@ -44,51 +44,112 @@ function containsThisNumber(binaryNumber, binaryNumberToFind){
 	return (decimalNumber & mask) !== 0 // [binaryNumber, binaryNumberToFind, (decimalNumber & mask) !== 0]
 }
 
-function findQueen(){
+function whichBox(row, col) { // pour avoir les coordonnées des intervalles du carré des 9 de la grille dans lequel se trouve la case [row, col]
+	let rowInterval = [];
+	let colInterval = [];
 	
-	const echiquier =[[1,0,0,0,0,0],
-				[0,0,0,0,1,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
-			     ]
-	//vérifier la colonne
-	let bitmaskColumn = ""
-	for (let row = echiquier.length-1; row >= 0; row--) {
-		for (let col = 0; col < 1; col++) {
-				console.log(row, col)
-				bitmaskColumn += echiquier[row][col]
+	if (row >= 0 && row <= 2){
+		rowInterval.push(0, 2)
+	} else if (row >= 3 && row <= 5){
+		rowInterval.push(3, 5)
+	} else if (row >= 6 && row <= 8){
+		rowInterval.push(6, 8)
+	}
+	
+	if (col >= 0 && col <= 2){
+		colInterval.push(0, 2)
+	} else if (col >= 3 && col <= 5){
+		colInterval.push(3, 5)
+	} else if (col >= 6 && col <= 8){
+		colInterval.push(6, 8)
+	}
+	
+	return [rowInterval, colInterval]
+}
+
+function numberIsNotTaken(grid, r, c, num){ // pour savoir si un nombre donné est déjà pris dans la ligne, colonne ou carré de la case [r, c]
+	
+	// est ce que num est déjà dans la ligne ? si oui notInRow = false
+	
+	let notInRow = true;
+	
+	for (column of grid[r]) {
+		if (column === num){
+			notInRow = false;
 		}
 	}
 	
-	//vérifier la ligne
-	let bitmaskRow = ""
-	for (let row = 0; row < 1; row++) {
-		for (let col = echiquier[row].length-1; col >= 0; col--) {
-				console.log(row, col)
-				bitmaskRow += echiquier[row][col]
+	// est ce que num est déjà dans la colonne ? si oui notInColumn = false
+	
+	let notInColumn = true;
+	
+	for (row of grid) {
+		if (row[c] === num){
+			notInColumn = false;
 		}
 	}
 	
-	//vérifier la diagonale
-	let bitmaskDiag = ""
-	for (let row = echiquier.length-1; row >= 0; row--) {
-		for (let col = row; col === row; col--) {
-				console.log(row, col)
-				bitmaskDiag += echiquier[row][col]
+	// est ce que num est déjà dans le carré ? si oui notInSquare = false
+	
+	let squareRows = whichBox(r, c)[0]
+	let squareColumns = whichBox(r, c)[1]
+	
+	let notInSquare = true;
+	
+	for (let i = squareRows[0]; i <= squareRows[1]; i++) {
+		for (let j = squareColumns[0]; j <= squareColumns[1]; j++) {
+			if (grid[i][j] === num){
+				notInSquare = false
+			}
 		}
 	}
 	
-	//vérifier l'anti-diagonale
-	let bitmaskAntiDiag = ""
-	for (let row = echiquier.length-1; row >= 0; row--) {
-		let column = echiquier.length-1 - row; 
-		console.log(row, column)
-		bitmaskAntiDiag += echiquier[row][column]
+	// si num n'est pas déjà dans la ligne, la colonne ou le carré alors numberIsNotTaken = true, je peux mettre num dans la case [row, col]
+	
+	if (notInRow, notInColumn, notInSquare){
+		return true
+	} else {
+		return false
 	}
 	
-	return [bitmaskColumn, bitmaskRow, bitmaskDiag, bitmaskAntiDiag];
+	
+}
+
+function takenNumbers(grid, r, c){ // pour savoir les nombres qu'on ne peut pas mettre dans une case vide (déjà présents soit dans la colonne, la ligne, ou le carré)
+
+	let banNumbers = []
+	
+	// nombres déjà pris dans la ligne
+	
+	for (let column of grid[r]) {
+		if (column !== 0 && !banNumbers.includes(column)){
+			banNumbers.push(column)
+			
+		}
+	}
+	
+	// nombres déjà pris dans la colonne
+	
+	for (let row of grid){
+		if (row[c] !== 0 && !banNumbers.includes(row[c])){
+			banNumbers.push(row[c])
+		}
+	}
+	
+	// nombres déjà pris dans la case
+	
+	let squareRows = whichBox(r, c)[0]
+	let squareColumns = whichBox(r, c)[1]
+	
+	for (let i = squareRows[0]; i <= squareRows[1]; i++) {
+		for (let j = squareColumns[0]; j <= squareColumns[1]; j++) {
+			if (grid[i][j] !== 0 && !banNumbers.includes(grid[i][j])){
+				banNumbers.push(grid[i][j])
+			}
+		}
+	}
+	
+	return banNumbers.sort()
 }
 
 // Error management
@@ -121,8 +182,9 @@ function displayTheSudokuSolved(){
 	}
 	
 	const sudoku = readFileSync(arguments[0]).replace(/\./g, '0')
+	const matrixSudoku = fromTxtToMatrix(sudoku)
 	
-      return console.log(fromTxtToMatrix(sudoku))
+      return console.log(matrixSudoku)
       
 }
 
