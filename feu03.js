@@ -2,14 +2,6 @@
 
 // Useful functions
 
-function testAllColors() {
-	for (let i = 0; i < 256; i++) {
-		const colorCode = `\x1b[38;5;${i}m`; // Code d'échappement pour la couleur
-		const colorCodeExample = `'\\x1b[38;5;${i}m'`;
-		console.log(`${colorCode}☗☗☗☗☗☗☗☗☗☗☗☗☗☗\x1b[0m`, colorCodeExample);
-	}
-}
-
 const util = require('util');
 	util.inspect.defaultOptions.depth = null; // pour afficher tout les sous tableaux dans le terminal
 
