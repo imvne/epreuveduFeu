@@ -10,6 +10,9 @@ function testAllColors() {
 	}
 }
 
+const util = require('util');
+	util.inspect.defaultOptions.depth = null; // pour afficher tout les sous tableaux dans le terminal
+
 function readFileSync(fileName){
 	const fs = require('fs')
 	let readOptions = {
@@ -36,12 +39,6 @@ function fromTxtToMatrix(string){
 	}
 	
 	return txtToSubArrays
-}
-
-function containsThisNumber(binaryNumber, binaryNumberToFind){
-	const decimalNumber = parseInt(binaryNumber, 2)
-	const mask = parseInt(binaryNumberToFind, 2)
-	return (decimalNumber & mask) !== 0 // [binaryNumber, binaryNumberToFind, (decimalNumber & mask) !== 0]
 }
 
 function whichBox(row, col) { // pour avoir les coordonnées des intervalles du carré des 9 de la grille dans lequel se trouve la case [row, col]
@@ -71,21 +68,17 @@ function numberIsNotTaken(grid, r, c, num){ // pour savoir si un nombre donné e
 	
 	// est ce que num est déjà dans la ligne ? si oui notInRow = false
 	
-	let notInRow = true;
-	
 	for (column of grid[r]) {
 		if (column === num){
-			notInRow = false;
+			return false
 		}
 	}
 	
 	// est ce que num est déjà dans la colonne ? si oui notInColumn = false
 	
-	let notInColumn = true;
-	
 	for (row of grid) {
 		if (row[c] === num){
-			notInColumn = false;
+			return false
 		}
 	}
 	
@@ -94,62 +87,40 @@ function numberIsNotTaken(grid, r, c, num){ // pour savoir si un nombre donné e
 	let squareRows = whichBox(r, c)[0]
 	let squareColumns = whichBox(r, c)[1]
 	
-	let notInSquare = true;
-	
 	for (let i = squareRows[0]; i <= squareRows[1]; i++) {
 		for (let j = squareColumns[0]; j <= squareColumns[1]; j++) {
 			if (grid[i][j] === num){
-				notInSquare = false
+				return false
 			}
 		}
 	}
 	
 	// si num n'est pas déjà dans la ligne, la colonne ou le carré alors numberIsNotTaken = true, je peux mettre num dans la case [row, col]
 	
-	if (notInRow, notInColumn, notInSquare){
-		return true
-	} else {
-		return false
-	}
+	return true
 	
 	
 }
 
-function takenNumbers(grid, r, c){ // pour savoir les nombres qu'on ne peut pas mettre dans une case vide (déjà présents soit dans la colonne, la ligne, ou le carré)
-
-	let banNumbers = []
+function solveSudoku (grid){
 	
-	// nombres déjà pris dans la ligne
-	
-	for (let column of grid[r]) {
-		if (column !== 0 && !banNumbers.includes(column)){
-			banNumbers.push(column)
-			
-		}
-	}
-	
-	// nombres déjà pris dans la colonne
-	
-	for (let row of grid){
-		if (row[c] !== 0 && !banNumbers.includes(row[c])){
-			banNumbers.push(row[c])
-		}
-	}
-	
-	// nombres déjà pris dans la case
-	
-	let squareRows = whichBox(r, c)[0]
-	let squareColumns = whichBox(r, c)[1]
-	
-	for (let i = squareRows[0]; i <= squareRows[1]; i++) {
-		for (let j = squareColumns[0]; j <= squareColumns[1]; j++) {
-			if (grid[i][j] !== 0 && !banNumbers.includes(grid[i][j])){
-				banNumbers.push(grid[i][j])
-			}
-		}
-	}
-	
-	return banNumbers.sort()
+	for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (grid[i][j] === 0) {
+                    for (let num = 1; num <= 9; num++) {
+                        if (numberIsNotTaken(grid, i, j, num)) {
+                            grid[i][j] = num;
+                            if (solveSudoku(grid)) {
+                                return grid;
+                            }
+                            grid[i][j] = 0;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return grid
 }
 
 // Error management
@@ -163,6 +134,28 @@ function isValidArguments(arguments){
 	}
 }
 
+function checkSudokuGrid(grid){ // vérifie si la grille totalement remplie est valide, en additionnant chaque ligne, colonne, case
+	
+	 // vérification que chaque ligne, colonne, et carré 3x3 vaut 45
+	 for (let i = 0; i < 9; i++) {
+		let rowSum = 0, colSum = 0;
+		let boxSum = 0;
+    
+		for (let j = 0; j < 9; j++) {
+		    rowSum += grid[i][j];
+		    colSum += grid[j][i];
+    
+		    let rowStart = 3 * Math.floor(i / 3);
+		    let colStart = 3 * (i % 3);
+		    boxSum += grid[rowStart + Math.floor(j / 3)][colStart + (j % 3)];
+		}
+    
+		if (rowSum !== 45 || colSum !== 45 || boxSum !== 45) {
+		    return `\x1b[38;5;196mIl y a une erreur dans la grille\x1b[0m`;
+		}
+	  }
+	  return `\x1b[38;5;113mLa grille est validée\x1b[0m`;
+}
 
 // Parsing
 
@@ -181,10 +174,38 @@ function displayTheSudokuSolved(){
 		return
 	}
 	
-	const sudoku = readFileSync(arguments[0]).replace(/\./g, '0')
-	const matrixSudoku = fromTxtToMatrix(sudoku)
+	const sudokuGrid = readFileSync(arguments[0]).replace(/\./g, '0')
+	const matrixSudoku = fromTxtToMatrix(sudokuGrid)
+	const toSolveSudoku = JSON.parse(JSON.stringify(matrixSudoku))
 	
-      return console.log(matrixSudoku)
+	let sudoku = ""
+	let matrixSudokuSolved = ""
+	
+	for (let i = 0; i < 9; i++) {
+		for (let j = 0; j < 9; j++) {
+			if (matrixSudoku[i][j] === 0) {
+				sudoku += `\x1b[38;5;236m${matrixSudoku[i][j]}\x1b[0m `
+				matrixSudokuSolved += `\x1b[38;5;32m${solveSudoku(toSolveSudoku)[i][j]}\x1b[0m `
+			} else {
+				sudoku += `${toSolveSudoku[i][j]} `
+				matrixSudokuSolved += `${solveSudoku(toSolveSudoku)[i][j]} `
+			}
+			if (j === 2 || j === 5 || j === 8){
+				sudoku += "  "
+				matrixSudokuSolved += "  "
+			}
+		}
+		if (i === 2 || i === 5 || i === 8){
+			sudoku += `\n`
+			matrixSudokuSolved += `\n`
+		}
+		sudoku += `\n`
+		matrixSudokuSolved += `\n`
+	}
+	
+	const result = `${sudoku}\n${matrixSudokuSolved}${checkSudokuGrid(solveSudoku(toSolveSudoku))}`
+	
+      return console.log(result)
       
 }
 
