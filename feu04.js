@@ -158,18 +158,47 @@ function isValidArguments(arguments){
 	}
 }
 
-function isValidFileFormat(argument){
-	if (argument.slice(-3) === ".js"){
-		return argument
+function isValidFileFormat(fileName){
+	if (fileName.slice(-3) === ".js"){
+		return fileName
 	} 
 	
-	else if (argument.slice(-4) === ".txt"){
-		return argument
+	else if (fileName.slice(-4) === ".txt"){
+		return fileName
 	} 
 	
 	else {
 		return console.log(`\x1b[38;5;124merreur : insérez un plateau au format .js ou .txt\x1b[0m`)
 	}
+}
+
+function isValidGrid(gridArray){
+	const numberOfLines = gridArray[0].slice(0,-3).join("")
+	const gridPieces = gridArray[0].slice(-3)
+	
+	if (gridArray.length-1 !== parseInt(numberOfLines)){
+		return console.log(`\x1b[38;5;124merreur : le nombre de lignes est incorrect\x1b[0m\n-${gridArray.length-1}-${numberOfLines}-`)
+	}
+	
+	const excludeFirstElement = gridArray.length-1
+	
+	for (let subArray of gridArray.slice(- excludeFirstElement)) {
+		if (subArray.length !== gridArray[1].length){
+			return console.log(`\x1b[38;5;124merreur : toutes les lignes du plateau n'ont pas la même longueur\x1b[0m`)
+		}
+		
+		for (let element of subArray.join("")) {
+		    if (!gridPieces.includes(element)) {
+			  return console.log(`\x1b[38;5;124merreur : les pièces du plateau ne correspondent pas aux pièces données\x1b[0m`)
+		    }
+		}
+	}
+	
+	if (gridArray.length < 2){
+		return console.log(`\x1b[38;5;124merreur : le plateau doit au moins avoir une ligne\x1b[0m`)
+	}
+	
+	return gridArray
 }
 
 
@@ -205,6 +234,11 @@ function displayTheGridSolved(){
 		
 		const grid = fromTxtToMatrix(readFileSync(argument))
 		const biggestSquareFound = findBiggestSquare(grid)
+		
+		if (!isValidGrid(grid)){
+			return
+		}
+		
 		
 		return console.log(displaySolvedGrid(grid, biggestSquareFound))
 		
