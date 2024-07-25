@@ -22,9 +22,11 @@ feu00.js - Échauffement
 
 feu01.js - Évaluer une expression
 
-    Créez un programme qui reçoit une expression arithmétique dans une chaîne de caractères et en retourne le résultat après l’avoir calculé.
+    Créez un programme qui reçoit une expression arithmétique dans une chaîne de caractères et 
+    en retourne le résultat après l’avoir calculé.
     
-    Vous devez gérer les 5 opérateurs suivants : “+” pour l’addition, “-” pour la soustraction, “*” la multiplication, “/” la division et “%” le modulo.
+    Vous devez gérer les 5 opérateurs suivants : “+” pour l’addition, “-” pour la soustraction, 
+    “*” la multiplication, “/” la division et “%” le modulo.
     
     Exemple d’utilisation :
     
@@ -36,7 +38,8 @@ feu01.js - Évaluer une expression
 
 feu02.js - Trouver une forme
     
-    Créez un programme qui affiche la position de l’élément le plus en haut à gauche (dans l’ordre) d’une forme au sein d’un plateau.
+    Créez un programme qui affiche la position de l’élément le plus en haut à gauche 
+    (dans l’ordre) d’une forme au sein d’un plateau.
     
     Exemples d’utilisation :
     $> cat board.txt
@@ -95,7 +98,10 @@ feu03.js - Sudoku
 
 feu04.js - Trouver le plus grand carré
     
-    Créez un programme qui remplace les caractères vides par des caractères plein pour représenter le plus grand carré possible sur un plateau. Le plateau sera transmis dans un fichier. La première ligne du fichier contient les informations pour lire la carte : nombre de lignes du plateau, caractères pour “vide”, “obstacle” et “plein”.
+    Créez un programme qui remplace les caractères vides par des caractères plein pour 
+    représenter le plus grand carré possible sur un plateau. Le plateau sera transmis 
+    dans un fichier. La première ligne du fichier contient les informations pour lire 
+    la carte : nombre de lignes du plateau, caractères pour “vide”, “obstacle” et “plein”.
     
     Exemples d’utilisation :
     $> cat plateau
@@ -123,7 +129,9 @@ feu04.js - Trouver le plus grand carré
     
     Vous devez gérer les potentiels problèmes d’arguments, de fichiers, ou de carte invalide.
     
-    Une carte est valide uniquement si : les lignes ont toute la même longueur, il y a au moins une ligne d’une case, les lignes sont séparées d’un retour à la ligne, les caractères présents dans la carte sont uniquement ceux de la première ligne
+    Une carte est valide uniquement si : les lignes ont toute la même longueur, il y a au 
+    moins une ligne d’une case, les lignes sont séparées d’un retour à la ligne, les 
+    caractères présents dans la carte sont uniquement ceux de la première ligne
     
     En cas de plusieurs solutions, le carré le plus en haut à gauche sera choisi.
     
@@ -131,11 +139,15 @@ feu04.js - Trouver le plus grand carré
 
 feu05.js - Labyrinthe
     
-    Créez un programme qui trouve le plus court chemin entre l’entrée et la sortie d’un labyrinthe en évitant les obstacles.
+    Créez un programme qui trouve le plus court chemin entre l’entrée et la sortie d’un labyrinthe 
+    en évitant les obstacles.
     
-    Le labyrinthe est transmis en argument du programme. La première ligne du labyrinthe contient les informations pour lire la carte : LIGNESxCOLS, caractère plein, vide, chemin, entrée et sortie du labyrinthe. 
+    Le labyrinthe est transmis en argument du programme. La première ligne du labyrinthe contient 
+    les informations pour lire la carte : LIGNESxCOLS, caractère plein, vide, chemin, entrée et sortie du labyrinthe. 
     
-    Le but du programme est de remplacer les caractères “vide” par des caractères “chemin” pour représenter le plus court chemin pour traverser le labyrinthe. Un déplacement ne peut se faire que vers le haut, le bas, la droite ou la gauche.
+    Le but du programme est de remplacer les caractères “vide” par des caractères “chemin” pour 
+    représenter le plus court chemin pour traverser le labyrinthe. Un déplacement ne peut se faire 
+    que vers le haut, le bas, la droite ou la gauche.
     
     Exemples d’utilisation :
     $> cat -e example.map
