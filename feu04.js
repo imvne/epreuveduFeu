@@ -78,9 +78,8 @@ function findBiggestSquare(grid){
 		for (let c = 0; c < grid[r].length; c++) {
 			// pour définir la zone de recherche je dois trouver sa largeur/hauteur
 			
-			let rZoneSquareWidth = Math.min(grid.length - r - 1 , grid[1].length - c) // -1 pour ne pas compter la première ligne du plateau "5.xo"
-			
-			
+			let rZoneSquareWidth = Math.min(grid.length - r, grid[1].length - c)
+
 			while (rZoneSquareWidth >= 2 && rZoneSquareWidth > biggestSquareStored[2]){ // tant que la zone de recherche à pour largeur/hauteur au moins 2, et qu'elle est plus grande que le dernier carré trouvé
 				
 				if (isASquare(grid, [r, c], rZoneSquareWidth) === true){
@@ -177,7 +176,7 @@ function isValidGrid(gridArray){
 	const gridPieces = gridArray[0].slice(-3)
 	
 	if (gridArray.length-1 !== parseInt(numberOfLines)){
-		return console.log(`\x1b[38;5;124merreur : le nombre de lignes est incorrect\x1b[0m\n-${gridArray.length-1}-${numberOfLines}-`)
+		return console.log(`\x1b[38;5;124merreur : le nombre de lignes est incorrect\x1b[0m\n`)
 	}
 	
 	const excludeFirstElement = gridArray.length-1
