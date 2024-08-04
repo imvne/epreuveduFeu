@@ -152,29 +152,29 @@ feu05.js - Labyrinthe
     Exemples d’utilisation :
     $> cat -e example.map
     10x10* o12$
-    *****2****$
-    * *   ****$
-    *   **** *$
-    * ****   *$
-    *  *     2$
-    *  ** *  *$
-    *     * **$
-    ***  **  *$
-    1     ****$
-    **********$
+    ● ● ● ● ● 2 ● ● ● ●
+    ●   ●       ● ● ● ●
+    ●       ● ● ● ●   ●
+    ●   ● ● ● ●       ●
+    ●     ●           2
+    ●     ● ●   ●     ●
+    ●        ●      ● ●
+    ● ● ●     ● ●     ●
+    1           ● ● ● ●
+    ● ● ● ● ● ● ● ● ● ●
     
     $> ruby exo.rb example.map
     10x10* o12
-    *****2****
-    * *   **** 
-    *   **** *
-    * ****   * 
-    *  * oooo2
-    *  **o*  *
-    *  ooo* **
-    ***o **  *
-    1ooo  ****
-    **********
+    ● ● ● ● ● 2 ● ● ● ●
+    ●   ●       ● ● ● ●
+    ●       ● ● ● ●   ●
+    ●   ● ● ● ●       ●
+    ●     ●   o o o o o
+    ●     ● ● o ●     ●
+    ●       o o ●   ● ●
+    ● ● ●   o ● ●     ●
+    1 o o o o   ● ● ● ●
+    ● ● ● ● ● ● ● ● ● ●
     => SORTIE ATTEINTE EN 12 COUPS !
     
     Vous devez gérer les erreurs / Vous trouverez un générateur de labyrinthe en annexe de cet exercice.
