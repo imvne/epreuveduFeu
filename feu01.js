@@ -79,7 +79,7 @@ function calculator(array){ // calcule les éléments les uns à la suite des au
 		}
 	}
 	
-	for (let i = 0 ; i < array.length ; i++){
+	for (let i = 0 ; i < array.length ; i++){ // utiliser un switch
 		let tempResult;
 		
 		if (array[i] === "+"){

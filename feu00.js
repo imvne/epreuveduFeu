@@ -35,7 +35,7 @@ function isValidArguments(arguments){
 }
 
 function isPositiveInteger(number){
-	if (number > 0 && Number.isInteger(Number(number))){ // n'inclus pas le zéro
+	if (number > 0 && Number.isInteger(Number(number))){ // n'inclus pas le zéro (faire une autre fonction pour les 0)
 		return parseInt(number);
 	} else {
 		return console.log("erreur : n'insérez que des entiers positifs supérieurs à zéro")
@@ -67,7 +67,10 @@ function displayRectangle(){
 		}
 	}
 	
-      return console.log(buildRectangle(numbers[0], numbers[1]))
+	const columns = numbers[0]
+	const lines = numbers[1]
+	
+      return console.log(buildRectangle(columns, lines))
       
 }
 

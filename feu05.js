@@ -98,10 +98,8 @@ function getPossibleWays(maze, currentSquare, visitedWays, queue, exit){
 	return possibleWays
 }
 
-let visited = new Set()
-let queue = new Set()
 
-function findMazeShortestWayOut(maze, currentPiece, mazeExit){ // 
+function findMazeShortestWayOut(maze, currentPiece, mazeExit, visited, queue){ // 
 	queue.add(`${currentPiece[0]},${currentPiece[1]}`);
 	visited.add(`${currentPiece[0]},${currentPiece[1]}`)
 	
@@ -122,7 +120,7 @@ function findMazeShortestWayOut(maze, currentPiece, mazeExit){ //
 			break
 		}
 		
-		findMazeShortestWayOut(maze, [arrayQueue[i].split(',')[0], arrayQueue[i].split(',')[1]], mazeExit)
+		findMazeShortestWayOut(maze, [arrayQueue[i].split(',')[0], arrayQueue[i].split(',')[1]], mazeExit, visited, queue)
 		
 		
 		break
@@ -217,7 +215,11 @@ function displayMazeEscaped(){
 	const mazeBeginning = findCoordinates(maze, '1')
 	const mazeEnd = "2"
 	
-	const shortestWayOut = findMazeShortestWayOut(maze, mazeBeginning, mazeEnd)
+	let visited = new Set()
+	let queue = new Set()
+
+	
+	const shortestWayOut = findMazeShortestWayOut(maze, mazeBeginning, mazeEnd, visited, queue)
 	
 	
 	return console.log(displayMaze(maze, shortestWayOut))
