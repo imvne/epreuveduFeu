@@ -1,7 +1,5 @@
 // Labyrinthe
 
-const { get } = require('http');
-
 // Useful functions
 
 function testAllColors() {
@@ -28,21 +26,6 @@ function readFileSync(fileName) {
 		console.error(`\x1b[38;5;124merreur : une erreur s'est produite lors de la lecture du fichier\x1b[0m`, error);
 	    }
 	    return null;
-	}
-}
-
-function executeFileAndGetOutput(fileName) { //output du fichier testé
-	const { execSync } = require('child_process');
-	try {
-		// Exécute le fichier synchroniquement et récupère l'output
-		const output = execSync(`node ${fileName}`, { encoding: 'utf-8' });
-
-		return output.trim()
-	} 
-	
-	catch (error) {
-		console.error(`\x1b[38;5;124merreur : erreur lors de l'exécution du fichier\x1b[0m`);
-		return null;
 	}
 }
 
@@ -115,27 +98,10 @@ function getPossibleWays(maze, currentSquare, visitedWays, queue, exit){
 	return possibleWays
 }
 
-let mazeData = [
-	["8,3",  "7,3", "6,3", "impasse"],
-	["8,3",  "8,4", "8,5", "impasse"],
-	["8,3",  "8,4", "7,4", "6,4", "6,5", "5,5", "4,5", "4,4", "impasse"],
-	["8,3",  "8,4", "7,4", "6,4", "6,5", "5,5", "4,5", "4,6", "3,6", "impasse"],
-	
-	["8,3",  "8,4", "7,4", "6,4", "6,5", "5,5", "4,5", "4,6", "4,7", "4,8", "4,9", "sortie"],
-	["8,3",  "8,4", "7,4", "6,4", "6,5", "5,5", "4,5", "4,6", "4,7", "4,8", "3,8", "impasse"],
-	["8,3",  "8,4", "7,4", "6,4", "6,5", "5,5", "4,5", "4,6", "4,7", "4,8", "5,8", "impasse"],
-	
-	["8,3",  "8,4", "7,4", "6,4", "6,5", "5,5", "4,5", "4,6", "4,7", "3,7", "3,8", "impasse"],
-	
-	["8,3",  "8,4", "7,4", "6,4", "6,5", "5,5", "4,5", "4,6", "4,7", "5,7", "6,7", "7,7", "7,8", "impasse"],
-]
-
 let visited = new Set()
 let queue = new Set()
 
 function findMazeShortestWayOut(maze, currentPiece, mazeExit){ // 
-	//console.log("nouvelle récursion", currentPiece)
-	
 	queue.add(`${currentPiece[0]},${currentPiece[1]}`);
 	visited.add(`${currentPiece[0]},${currentPiece[1]}`)
 	
@@ -146,16 +112,11 @@ function findMazeShortestWayOut(maze, currentPiece, mazeExit){ //
 		
 	}
 	
-	// console.log("queue : ", queue)
-	// console.log("visited : ", visited)
-	
 	let firstIn = queue.values().next().value;
 			  queue.delete(firstIn)
 	
 	let arrayQueue = [...queue]
-	//console.log(arrayQueue)
 	for (let i = 0 ; i < arrayQueue.length ; i++){
-		//console.log(`${arrayQueue[0]}, itération n ${i+1}/${arrayQueue.length}\n`)
 		
 		if (maze[currentPiece[0]][currentPiece[1]] === mazeExit){
 			break
@@ -199,7 +160,7 @@ function displayMaze(mazeArray, path){
 		mazeTxt += subArray.join(" ") + '\n'
 	}
 	
-	return mazeTxt
+	return `${mazeTxt}\n\x1b[38;5;219msortie atteinte en ${path.length} coups :)\x1b[0m`
 	
 }
 
@@ -243,6 +204,10 @@ function displayMazeEscaped(){
       const argument = isValidArguments(getArguments());
 	
 	if(!argument){
+		return
+	}
+	
+	if (!isValidFileFormat(argument)){
 		return
 	}
 	
