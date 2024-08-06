@@ -120,10 +120,11 @@ function findMazeShortestWayOut(maze, currentPiece, mazeExit, visited, queue){ /
 			break
 		}
 		
-		findMazeShortestWayOut(maze, [arrayQueue[i].split(',')[0], arrayQueue[i].split(',')[1]], mazeExit, visited, queue)
+		const nextPieceRow = arrayQueue[i].split(',')[0]
+		const nextPieceCol = arrayQueue[i].split(',')[1]
 		
+		return findMazeShortestWayOut(maze, [nextPieceRow, nextPieceCol], mazeExit, visited, queue)
 		
-		break
 	}
 	
 	let arrayVisited = [...visited]
