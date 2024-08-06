@@ -1,5 +1,7 @@
 // Évaluer une expression
 
+const exp = require("constants");
+
 // Useful functions
 
 function fromBracketToArray(array){ // transforme toutes les paires de parenthèses en sous tableau
@@ -129,14 +131,16 @@ function getArguments(){
 
 function displayResultOfCalculator(){
       const argument = isValidArguments(getArguments());
-	const expression = argument.split(' ');
-	const numbersInSubArrays = putMultDivInArrays(fromBracketToArray(expression))
 	
 	if (!argument){
 		return
 	}
 	
-      return console.log(calculator(numbersInSubArrays))
+	const expression = argument.split(' ');
+	const numbersInSubArrays = putMultDivInArrays(fromBracketToArray(expression))
+	const resultOfExpression =  calculator(numbersInSubArrays)[0]
+	
+      return console.log(resultOfExpression)
       
 }
 

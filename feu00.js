@@ -38,7 +38,7 @@ function isPositiveInteger(number){
 	if (number > 0 && Number.isInteger(Number(number))){ // n'inclus pas le zéro
 		return parseInt(number);
 	} else {
-		return console.log("erreur : n'insérez que des entiers positifs")
+		return console.log("erreur : n'insérez que des entiers positifs supérieurs à zéro")
 	}
 }
 
